@@ -8,6 +8,13 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.json({
+        status : 'ok',
+        message: 'API is running'
+    })
+});
+
 app.get('/configs/:droneId', async (req, res) => {
   try {
     const { droneId } = req.params;

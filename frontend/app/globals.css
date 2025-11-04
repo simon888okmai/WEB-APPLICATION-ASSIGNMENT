@@ -1,4 +1,4 @@
-/* File: frontend/app/globals.css */
+/* File: frontend/app/globals.css (อัปเกรด Layout 2x2) */
 
 /* --- Basic Setup (Dark Mode) --- */
 :root {
@@ -46,16 +46,36 @@ h1, h2 {
   border: 1px solid var(--border-color);
 }
 
-/* --- Components --- */
-.config-list {
-  list-style: none;
+/* --- Config Grid (Style ใหม่ตามรูปวาด) --- */
+.config-grid {
+  display: grid;
+
+  /* --- (แก้ตรงนี้!) --- */
+  grid-template-columns: repeat(2, 1fr); /* (เปลี่ยนจาก 4 เป็น 2 คอลัมน์) */
+  /* --- (แก้ตรงนี้!) --- */
+  
+  gap: 1.5rem; /* (เพิ่ม Gap ให้ดูห่างกันสวยๆ) */
 }
-.config-list li {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+
+.config-item {
+  display: flex;
+  flex-direction: column;
 }
-.config-list li strong {
-  color: var(--primary-color);
+
+.config-item-header {
+  font-size: 1.5rem; 
+  color: var(--primary-color); 
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.config-item-data {
+  font-size: 1.2rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 /* --- Form --- */
@@ -105,17 +125,21 @@ h1, h2 {
   border-collapse: collapse;
 }
 
+/* (อัปเกรดสำหรับ 5 columns) */
 .log-table th,
 .log-table td {
   padding: 0.75rem;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem; /* ลดขนาดตัวอักษร */
+  white-space: nowrap; /* กันข้อความตกบรรทัด */
 }
 
 .log-table th {
   background-color: #333;
 }
-/* --- Pagination (เพิ่มต่อท้าย) --- */
+
+/* --- Pagination --- */
 .pagination-controls {
   display: flex;
   justify-content: space-between;

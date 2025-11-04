@@ -1,4 +1,4 @@
-// File: frontend/app/page.js (อัปเกรดแล้ว! 🚀)
+// File: frontend/app/page.js (อัปเกรด Config Card แล้ว!)
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -8,11 +8,11 @@ export default function DashboardPage() {
   // --- Part 1: Config State (from Context) ---
   const { config, setConfig, loading: configLoading, setLoading: setConfigLoading } = useDrone();
 
-  // --- Part 3: Logs State (อัปเกรด) ---
+  // --- Part 3: Logs State ---
   const [logs, setLogs] = useState([]);
   const [logsLoading, setLogsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1); // <-- 1. เพิ่ม State หน้าปัจจุบัน
-  const [paginationInfo, setPaginationInfo] = useState(null); // <-- 2. เพิ่ม State ข้อมูลแบ่งหน้า
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationInfo, setPaginationInfo] = useState(null);
 
   // --- Part 2: Form State ---
   const [celsius, setCelsius] = useState('');
@@ -31,7 +31,6 @@ export default function DashboardPage() {
     }
     async function fetchConfig() {
       try {
-        console.log(`Fetching config from: ${apiUrl}/configs/${droneId}`);
         const response = await fetch(`${apiUrl}/configs/${droneId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch config');
@@ -47,28 +46,19 @@ export default function DashboardPage() {
     fetchConfig();
   }, [config, setConfig, setConfigLoading, droneId, apiUrl]);
 
-
-  // --- Part 3 Logic: Fetch Logs Function (อัปเกรด) ---
+  // --- Part 3 Logic: Fetch Logs Function (เหมือนเดิม) ---
   const fetchLogs = useCallback(async (pageToFetch) => {
     if (!droneId || !apiUrl) return;
-
     setLogsLoading(true);
     try {
-      // 3. ส่ง "page" ไปกับ request
-      console.log(`Fetching logs from: ${apiUrl}/logs/${droneId}?page=${pageToFetch}`);
       const response = await fetch(`${apiUrl}/logs/${droneId}?page=${pageToFetch}`);
-      
       if (!response.ok) {
         throw new Error('Failed to fetch logs');
       }
-      
-      // 4. รับ Response object ใหม่
-      const data = await response.json(); // (นี่คือ { logs: [], pagination: {} })
-      
-      setLogs(data.logs); // <-- 5. อัปเดต logs
-      setPaginationInfo(data.pagination); // <-- 6. อัปเดตข้อมูลแบ่งหน้า
-      setCurrentPage(data.pagination.page); // <-- 7. อัปเดตหน้าปัจจุบัน
-      
+      const data = await response.json();
+      setLogs(data.logs);
+      setPaginationInfo(data.pagination);
+      setCurrentPage(data.pagination.page);
     } catch (error) {
       console.error(error);
     } finally {
@@ -76,28 +66,41 @@ export default function DashboardPage() {
     }
   }, [droneId, apiUrl]);
 
-  // Fetch logs on page load (เรียกหน้า 1)
+  // Fetch logs on page load (เหมือนเดิม)
   useEffect(() => {
     fetchLogs(1); 
   }, [fetchLogs]);
 
-
-  // --- Part 2 Logic: Handle Form Submit (อัปเกรด) ---
+  // --- Part 2 Logic: Handle Form Submit (เหมือนเดิม) ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormLoading(true);
     setMessage('');
-    if (!config) { /* ... (เช็ค config เหมือนเดิม) ... */ }
+    
+    if (!config) {
+      setMessage('Error: Config not loaded. Please wait or refresh.');
+      setFormLoading(false);
+      return;
+    }
 
-    const dataToLog = { /* ... (ข้อมูล log เหมือนเดิม) ... */ };
+    const dataToLog = { 
+      drone_id: config.drone_id,
+      drone_name: config.drone_name,
+      country: config.country,
+      celsius: parseFloat(celsius),
+    };
 
     try {
-      const response = await fetch(`${apiUrl}/logs`, { /* ... (POST เหมือนเดิม) ... */ });
+      const response = await fetch(`${apiUrl}/logs`, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToLog) 
+      });
 
       if (response.ok) {
         setMessage('Log created successfully!');
         setCelsius(''); 
-        fetchLogs(1); // ⭐️ (อัปเกรด) Refresh กลับไปหน้า 1
+        fetchLogs(1);
       } else {
         const errorData = await response.json();
         setMessage(`Error: ${errorData.error}`);
@@ -109,13 +112,12 @@ export default function DashboardPage() {
     }
   };
 
-  // --- 8. เพิ่ม Function คลิกปุ่ม Next/Prev ---
+  // --- Logic คลิกปุ่ม Next/Prev (เหมือนเดิม) ---
   const handleNextPage = () => {
     if (paginationInfo && currentPage < paginationInfo.totalPages) {
       fetchLogs(currentPage + 1);
     }
   };
-
   const handlePrevPage = () => {
     if (currentPage > 1) {
       fetchLogs(currentPage - 1);
@@ -127,18 +129,33 @@ export default function DashboardPage() {
     <>
       <h1>Drone Dashboard</h1>
       <div className="dashboard-grid">
-        {/* --- Card 1: View Config (เหมือนเดิม) --- */}
+        
+        {/* --- (อัปเกรดแล้ว!) Card 1: View Config --- */}
         <section className="card">
-          <h2>Drone Config</h2>
+          {/* 1. เปลี่ยน Title ตามรูป ...17.36.18.png */}
+          <h2>Drone Configuration</h2>
           {configLoading ? (
             <p>Loading Config...</p>
           ) : config ? (
-            <ul className="config-list">
-              <li><strong>ID:</strong> {config.drone_id}</li>
-              <li><strong>Name:</strong> {config.drone_name}</li>
-              <li><strong>Country:</strong> {config.country}</li>
-              <li><strong>Light:</strong> {config.light}</li>
-            </ul>
+            // 2. เปลี่ยนจาก <ul> เป็น Grid ใหม่ (ตามรูป ...17.36.18.png)
+            <div className="config-grid">
+              <div className="config-item">
+                <span className="config-item-header">ID</span>
+                <span className="config-item-data">{config.drone_id}</span>
+              </div>
+              <div className="config-item">
+                <span className="config-item-header">Name</span>
+                <span className="config-item-data">{config.drone_name}</span>
+              </div>
+              <div className="config-item">
+                <span className="config-item-header">Country</span>
+                <span className="config-item-data">{config.country}</span>
+              </div>
+              <div className="config-item">
+                <span className="config-item-header">Light</span>
+                <span className="config-item-data">{config.light}</span>
+              </div>
+            </div>
           ) : (
             <p>Error: Could not load config.</p>
           )}
@@ -149,7 +166,7 @@ export default function DashboardPage() {
           <h2>Log Temperature</h2>
           <form className="log-form" onSubmit={handleSubmit}>
             <label htmlFor="celsius">Temperature (Celsius):</label>
-            <input /* ... (Input attributes เหมือนเดิม) ... */
+            <input
               id="celsius"
               type="number"
               step="0.1"
@@ -165,9 +182,9 @@ export default function DashboardPage() {
           </form>
         </section>
 
-        {/* --- Card 3: View Logs (อัปเกรด) --- */}
+        {/* --- Card 3: View Logs (เหมือนเดิม) --- */}
         <section className="card log-table-container">
-          <h2>Recent Logs</h2> {/* (ลบ "Last 12" ออก) */}
+          <h2>Recent Logs</h2>
           {logsLoading ? (
             <p>Loading logs...</p>
           ) : (
@@ -175,29 +192,33 @@ export default function DashboardPage() {
               <table className="log-table">
                 <thead>
                   <tr>
-                    <th>Log ID</th>
+                    <th>Created</th>
+                    <th>Country</th>
+                    <th>Drone ID</th>
+                    <th>Drone Name</th>
                     <th>Celsius</th>
-                    <th>Timestamp</th>
                   </tr>
                 </thead>
                 <tbody>
                   {logs.length > 0 ? (
                     logs.map((log) => (
                       <tr key={log.id}>
-                        <td>{log.id.substring(0, 8)}...</td>
-                        <td>{log.celsius}°C</td>
                         <td>{new Date(log.created).toLocaleString()}</td>
+                        <td>{log.country}</td>
+                        <td>{log.drone_id}</td>
+                        <td>{log.drone_name}</td>
+                        <td>{log.celsius}°C</td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="3">No logs found.</td>
+                      <td colSpan="5">No logs found.</td>
                     </tr>
                   )}
                 </tbody>
               </table>
 
-              {/* --- 9. เพิ่มปุ่ม Pagination! --- */}
+              {/* --- ปุ่ม Pagination (เหมือนเดิม) --- */}
               <div className="pagination-controls">
                 <button 
                   onClick={handlePrevPage} 
