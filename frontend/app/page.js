@@ -1,29 +1,29 @@
-// File: frontend/app/page.js (อัปเกรด Config Card แล้ว!)
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useDrone } from '../context/DroneContext';
 
 export default function DashboardPage() {
-  // --- Part 1: Config State (from Context) ---
+  
   const { config, setConfig, loading: configLoading, setLoading: setConfigLoading } = useDrone();
 
-  // --- Part 3: Logs State ---
+  
   const [logs, setLogs] = useState([]);
   const [logsLoading, setLogsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [paginationInfo, setPaginationInfo] = useState(null);
 
-  // --- Part 2: Form State ---
+  
   const [celsius, setCelsius] = useState('');
   const [formLoading, setFormLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  // --- Environment Variables ---
+  
   const droneId = process.env.NEXT_PUBLIC_DRONE_ID;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-  // --- Part 1 Logic: Fetch Config (เหมือนเดิม) ---
+  
   useEffect(() => {
     if (config || !droneId || !apiUrl) {
       setConfigLoading(false);
@@ -46,7 +46,7 @@ export default function DashboardPage() {
     fetchConfig();
   }, [config, setConfig, setConfigLoading, droneId, apiUrl]);
 
-  // --- Part 3 Logic: Fetch Logs Function (เหมือนเดิม) ---
+  
   const fetchLogs = useCallback(async (pageToFetch) => {
     if (!droneId || !apiUrl) return;
     setLogsLoading(true);
@@ -66,12 +66,12 @@ export default function DashboardPage() {
     }
   }, [droneId, apiUrl]);
 
-  // Fetch logs on page load (เหมือนเดิม)
+  
   useEffect(() => {
     fetchLogs(1); 
   }, [fetchLogs]);
 
-  // --- Part 2 Logic: Handle Form Submit (เหมือนเดิม) ---
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormLoading(true);
@@ -112,7 +112,7 @@ export default function DashboardPage() {
     }
   };
 
-  // --- Logic คลิกปุ่ม Next/Prev (เหมือนเดิม) ---
+  
   const handleNextPage = () => {
     if (paginationInfo && currentPage < paginationInfo.totalPages) {
       fetchLogs(currentPage + 1);
@@ -124,20 +124,20 @@ export default function DashboardPage() {
     }
   };
 
-  // --- RENDER (JSX) ---
+  
   return (
     <>
       <h1>Drone Dashboard</h1>
       <div className="dashboard-grid">
         
-        {/* --- (อัปเกรดแล้ว!) Card 1: View Config --- */}
+        
         <section className="card">
-          {/* 1. เปลี่ยน Title ตามรูป ...17.36.18.png */}
+          
           <h2>Drone Configuration</h2>
           {configLoading ? (
             <p>Loading Config...</p>
           ) : config ? (
-            // 2. เปลี่ยนจาก <ul> เป็น Grid ใหม่ (ตามรูป ...17.36.18.png)
+            
             <div className="config-grid">
               <div className="config-item">
                 <span className="config-item-header">ID</span>
@@ -161,7 +161,7 @@ export default function DashboardPage() {
           )}
         </section>
 
-        {/* --- Card 2: Log Form (เหมือนเดิม) --- */}
+        
         <section className="card">
           <h2>Log Temperature</h2>
           <form className="log-form" onSubmit={handleSubmit}>
@@ -182,7 +182,7 @@ export default function DashboardPage() {
           </form>
         </section>
 
-        {/* --- Card 3: View Logs (เหมือนเดิม) --- */}
+        
         <section className="card log-table-container">
           <h2>Recent Logs</h2>
           {logsLoading ? (
@@ -218,7 +218,7 @@ export default function DashboardPage() {
                 </tbody>
               </table>
 
-              {/* --- ปุ่ม Pagination (เหมือนเดิม) --- */}
+              
               <div className="pagination-controls">
                 <button 
                   onClick={handlePrevPage} 

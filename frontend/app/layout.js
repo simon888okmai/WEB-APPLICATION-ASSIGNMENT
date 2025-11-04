@@ -1,4 +1,4 @@
-// File: frontend/app/layout.js
+
 'use client'; 
 
 import './globals.css';
@@ -9,7 +9,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <DroneProvider>
-          {/* เราไม่ต้องใช้ <nav> แล้ว เพราะทุกอย่างอยู่ในหน้าเดียว */}
+          
           <main>
             {children}
           </main>
