@@ -73,9 +73,11 @@ app.get('/logs/:droneId', async (req, res) => {
     const logData = await response.json();
     const filteredLogs = logData.items.map((log) => ({
       id: log.id,
-      drone_id: log.drone_id,
-      celsius: log.celsius,
       created: log.created,
+      country: log.country,
+      drone_id: log.drone_id,
+      drone_name: log.drone_name,
+      celsius: log.celsius,
     }));
     const responseData = {
       logs: filteredLogs,
