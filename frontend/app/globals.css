@@ -1,26 +1,146 @@
-@import "tailwindcss";
+/* File: frontend/app/globals.css */
 
+/* --- Basic Setup (Dark Mode) --- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background-color: #1a1a1a;
+  --card-color: #2a2a2a;
+  --text-color: #f0f0f0;
+  --primary-color: #0070f3;
+  --border-color: #444;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  padding: 2rem;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1, h2 {
+  margin-bottom: 1rem;
+}
+
+/* --- Layout Grid --- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 Columns */
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: var(--card-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+}
+
+/* --- Components --- */
+.config-list {
+  list-style: none;
+}
+.config-list li {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+.config-list li strong {
+  color: var(--primary-color);
+}
+
+/* --- Form --- */
+.log-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.log-form label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.log-form input {
+  padding: 0.75rem;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: #333;
+  color: var(--text-color);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.log-form button {
+  padding: 0.75rem;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.log-form button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+/* --- Table --- */
+.log-table-container {
+  grid-column: 1 / -1; /* Make table span full width */
+}
+
+.log-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.log-table th,
+.log-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.log-table th {
+  background-color: #333;
+}
+/* --- Pagination (เพิ่มต่อท้าย) --- */
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.pagination-controls button {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  font-weight: 600;
+  font-size: 0.9rem;
 }

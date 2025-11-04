@@ -59,7 +59,9 @@ app.get('/status/:droneId', async (req, res) => {
 app.get('/logs/:droneId', async (req, res) => {
   try {
     const { droneId } = req.params;
-    const url = `${process.env.LOG_URL}?filter=(drone_id='${droneId}')&sort=-created&perPage=12`;
+    const page = req.query.page || 1;
+    const logsPerPage = 8;
+    const url = `${process.env.LOG_URL}?filter=(drone_id='${droneId}')&sort=-created&perPage=${logsPerPage}&page=${page}`;
     const response = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${process.env.LOG_API_TOKEN}`,
@@ -75,7 +77,16 @@ app.get('/logs/:droneId', async (req, res) => {
       celsius: log.celsius,
       created: log.created,
     }));
-    res.json(filteredLogs);
+    const responseData = {
+      logs: filteredLogs,
+      pagination: {
+        page: logData.page,
+        perPage: logData.perPage,
+        totalPages: logData.totalPages,
+        totalItems: logData.totalItems,
+      },
+    };
+    res.json(responseData);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

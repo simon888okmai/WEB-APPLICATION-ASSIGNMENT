@@ -1,14 +1,18 @@
 // File: frontend/app/layout.js
-import { DroneProvider } from '../context/DroneContext'; // 1. Import
+'use client'; 
+
 import './globals.css';
-// (import อื่นๆ ... )
+import { DroneProvider } from '../context/DroneContext';
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <DroneProvider> {/* 2. ครอบ children ด้วย Provider */}
-          {children}
+        <DroneProvider>
+          {/* เราไม่ต้องใช้ <nav> แล้ว เพราะทุกอย่างอยู่ในหน้าเดียว */}
+          <main>
+            {children}
+          </main>
         </DroneProvider>
       </body>
     </html>
