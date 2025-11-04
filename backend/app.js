@@ -60,7 +60,7 @@ app.get('/logs/:droneId', async (req, res) => {
   try {
     const { droneId } = req.params;
     const page = req.query.page || 1;
-    const logsPerPage = 8;
+    const logsPerPage = 12;
     const url = `${process.env.LOG_URL}?filter=(drone_id='${droneId}')&sort=-created&perPage=${logsPerPage}&page=${page}`;
     const response = await fetch(url, {
       headers: {
